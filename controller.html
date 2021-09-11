@@ -38,10 +38,11 @@
 <div id="dn2" class="udbtn" >▼</div>
 <div id="dn3" class="udbtn" >▼</div>
 </div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/electricbaka/bluejelly/src/bluejelly.js"></script>
 <script>
 
 function changeState(state) {
-    var elm = document.getElementById("status");
+    const elm = document.getElementById("status");
     if (state == 0) {
         console.log("change -> stop");
         elm.innerHTML = "stop";    
@@ -57,17 +58,42 @@ function changeState(state) {
 
 }
 
-var a1;
-var i = 0;
-document.getElementById("up1").addEventListener("pointerdown", ()=>{
-    a1 = setInterval( ()=>{ console.log(i+=1); }, 100);
-    changeState(1);
-});
+// https://monomonotech.jp/kurage/webbluetooth/write.html
+const ble = new BlueJelly();
+window.onload = () => {
+    ble.setUUID( "ArmController", BlueJelly.MICROBIT_UART_SERVICE, BlueJelly.MICROBIT_RX_CHARACTERISTIC);
+    ble.connectGATT("ArmController");
+    console.log("gogo");
+};
 
-document.getElementById("up1").addEventListener("pointerup", ()=>{
-    clearInterval(a1);
-    changeState(0);
-});
+function send(msg) {
+    const enc = new TextEncoder();
+    ble.write( "ArmController", enc.encode(msg+"\n"));
+};
+
+class Controller {
+    timerid;
+    elmid;
+    
+    constructor( elmid ) {
+        this.elmid = elmid;
+
+        document.getElementById(elmid).addEventListener("pointerdown", ()=>{
+            this.timerid = setInterval( ()=>{ send(elmid); }, 100);
+            changeState(1);
+        });
+
+        document.getElementById(elmid).addEventListener("pointerup", ()=>{
+            clearInterval(this.timerid);
+            changeState(0);
+        });
+    }
+};
+
+up1 = new Controller("up1");
+up2 = new Controller("up2");
+up3 = new Controller("up3");
+
 
 </script>
 </body>
