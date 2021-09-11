@@ -3,6 +3,7 @@
 <style type="text/css">
 .up_group {
     display: flex;
+    user-select: none;
 }
 .up_group > div{
     flex: 1;
@@ -10,6 +11,7 @@
 
 .down_group {
     display: flex;
+    user-select: none;
 }
 .down_group > div{
     flex: 1;
@@ -24,6 +26,7 @@
     font-size:50px; 
 }
 </style>
+<div id="status">stop</div>
 <body>
 <div class="up_group">
 <div id="up1" class="udbtn" >▲</div>
@@ -37,14 +40,33 @@
 </div>
 <script>
 
+function changeState(state) {
+    var elm = document.getElementById("status");
+    if (state == 0) {
+        console.log("change -> stop");
+        elm.innerHTML = "stop";    
+    }
+    else if (state == 1) {
+        console.log("change -> start");
+        elm.innerHTML = "start";
+    }
+    else {
+        console.log("change error ");
+        elm.innerHTML = "error";
+    }
+
+}
+
 var a1;
 var i = 0;
 document.getElementById("up1").addEventListener("pointerdown", ()=>{
     a1 = setInterval( ()=>{ console.log(i+=1); }, 100);
+    changeState(1);
 });
 
 document.getElementById("up1").addEventListener("pointerup", ()=>{
     clearInterval(a1);
+    changeState(0);
 });
 
 </script>
