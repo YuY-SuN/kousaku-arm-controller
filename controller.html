@@ -25,19 +25,35 @@
     text-align: center;
     font-size:50px; 
 }
+#scan {
+    padding: 10% 1%;
+    color: #5989cf;
+    background: #c6e4ff;
+    border-bottom: solid 6px #aac5de;
+    border-radius: 9px;
+    text-align: center;
+    font-size:50px; 
+}
 </style>
-<div id="status">stop</div>
 <body>
+<div id="status">stop</div>
+
+<div class="normal_group">
+<div id="scan">はじめる</div>
+</div>
+
 <div class="up_group">
 <div id="up1" class="udbtn" >▲</div>
 <div id="up2" class="udbtn" >▲</div>
 <div id="up3" class="udbtn" >▲</div>
 </div>
+
 <div class="down_group">
 <div id="dn1" class="udbtn" >▼</div>
 <div id="dn2" class="udbtn" >▼</div>
 <div id="dn3" class="udbtn" >▼</div>
 </div>
+
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/electricbaka/bluejelly/src/bluejelly.js"></script>
 <script>
 
@@ -60,17 +76,30 @@ function changeState(state) {
 
 // https://monomonotech.jp/kurage/webbluetooth/write.html
 const ble = new BlueJelly();
+let   scanned = false;
+
 window.onload = () => {
     ble.setUUID( "ArmController", BlueJelly.MICROBIT_UART_SERVICE, BlueJelly.MICROBIT_RX_CHARACTERISTIC);
-    ble.scan("ArmController");
-    ble.connectGATT("ArmController");
-    console.log("gogo");
 };
 
+function scan() {
+    ble.scan("ArmController");
+}
+
+ble.onScan =  (deviceName) => {
+    scanned = true; 
+}
+
 function send(msg) {
-    const enc = new TextEncoder();
-    ble.write( "ArmController", enc.encode(msg+"\n"));
+    if (scanned) {
+        const enc = new TextEncoder();
+        ble.write( "ArmController", enc.encode(msg+"\n"));
+    }
 };
+
+document.getElementById("scan").addEventListener("click", ()=>{
+    scan();
+});
 
 class Controller {
     timerid;
@@ -94,6 +123,11 @@ class Controller {
 up1 = new Controller("up1");
 up2 = new Controller("up2");
 up3 = new Controller("up3");
+
+dn1 = new Controller("dn1");
+dn2 = new Controller("dn2");
+dn3 = new Controller("dn3");
+
 
 
 </script>
