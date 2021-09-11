@@ -62,6 +62,7 @@ function changeState(state) {
 const ble = new BlueJelly();
 window.onload = () => {
     ble.setUUID( "ArmController", BlueJelly.MICROBIT_UART_SERVICE, BlueJelly.MICROBIT_RX_CHARACTERISTIC);
+    ble.scan("ArmController");
     ble.connectGATT("ArmController");
     console.log("gogo");
 };
