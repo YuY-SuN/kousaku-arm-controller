@@ -1,0 +1,53 @@
+<html>
+<head>
+<style type="text/css">
+.up_group {
+    display: flex;
+}
+.up_group > div{
+    flex: 1;
+}
+
+.down_group {
+    display: flex;
+}
+.down_group > div{
+    flex: 1;
+}
+.udbtn {
+    padding: 10% 1%;
+    color: #5989cf;
+    background: #c6e4ff;
+    border-bottom: solid 6px #aac5de;
+    border-radius: 9px;
+    text-align: center;
+    font-size:50px; 
+}
+</style>
+<body>
+<div class="up_group">
+<div id="up1" class="udbtn" >▲</div>
+<div id="up2" class="udbtn" >▲</div>
+<div id="up3" class="udbtn" >▲</div>
+</div>
+<div class="down_group">
+<div id="dn1" class="udbtn" >▼</div>
+<div id="dn2" class="udbtn" >▼</div>
+<div id="dn3" class="udbtn" >▼</div>
+</div>
+<script>
+
+var a1;
+var i = 0;
+document.getElementById("up1").addEventListener("pointerdown", ()=>{
+    a1 = setInterval( ()=>{ console.log(i+=1); }, 100);
+});
+
+document.getElementById("up1").addEventListener("pointerup", ()=>{
+    clearInterval(a1);
+});
+
+</script>
+</body>
+</head>
+</html>
